@@ -6,6 +6,10 @@ app = FastAPI()
 
 class InputText(BaseModel):
     input: str
+@app.get("/")
+def root():
+    return {"message": "Server running."}
+
 
 @app.post("/endpoint1")
 def endpoint1(data: InputText):
