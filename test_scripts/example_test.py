@@ -1,20 +1,11 @@
 import requests
+import json
 
-base_url = "https://blackbox-interface.vercel.app"
+BASE_URL = "https://blackbox-interface.vercel.app"
+HEADERS = {"Content-Type": "application/json"}
 
-headers = {
-    "Content-Type": "application/json"
-}
-
-endpoints = [
-    "/endpoint1",
-    "/endpoint2",
-    "/endpoint3",
-    "/endpoint4",
-    "/endpoint5"
-]
-
-test_inputs = [
+endpoints = ["/endpoint1", "/endpoint2", "/endpoint3", "/endpoint4", "/endpoint5"]
+inputs = [
     {"input": "hello"},
     {"input": "WORLD"},
     {"input": "aeiou"},
@@ -25,10 +16,13 @@ test_inputs = [
 ]
 
 for endpoint in endpoints:
-    print(f"\n--- Testing {endpoint} ---")
-    for data in test_inputs:
+    print(f"\n--- {endpoint} ---")
+    for payload in inputs:
         try:
-            res = requests.post(base_url + endpoint, headers=headers, json=data)
-            print(f"Input: {data['input']}\n→ Output: {res.json()}")
-        except Exception as e:
-            print(f"❌ Error on {endpoint} with input {data['input']}: {e}")
+            response = requests.post(BASE_URL + endpoint, headers=HEADERS, json=payload)
+            response.raise_for_status()  # catch HTTP errors
+            print(f"Input: {payload['input']}\n→ Output: {response.json()}")
+        except requests.exceptions.RequestException as e:
+            print(f"❌ Network or HTTP error for {endpoint} with input {payload['input']}: {e}")
+        except json.JSONDecodeError:
+            print(f"❌ Response from {endpoint} with input {payload['input']} is not valid JSON")
