@@ -1,55 +1,30 @@
 import requests
-import json
-import time
 
 base_url = "https://blackbox-interface.vercel.app"
+
 endpoints = [
-    "/api/reverse",
-    "/api/uppercase",
-    "/api/double",
-    "/api/mystery",
-    "/api/validate",
-    "/api/fibonacci",
-    "/api/hash"
+    "/endpoint1",
+    "/endpoint2",
+    "/endpoint3",
+    "/endpoint4",
+    "/endpoint5"
 ]
 
-test_inputs = [
+test_cases = [
     {"input": "hello"},
-    {"input": "1234"},
-    {"input": ""},
-    {"input": "A very long input to see how it reacts to length"},
+    {"input": "WORLD"},
+    {"input": "aeiou"},
+    {"input": "12345"},
+    {"input": "!@#$%"},
     {"input": "racecar"},
-    {"input": "0"},
-    {"input": "999999999"}
+    {"input": "The quick brown fox"}
 ]
 
-report = {}
-
-def test_endpoint(endpoint):
-    full_url = base_url + endpoint
-    print(f"\nTesting endpoint: {full_url}")
-    report[endpoint] = []
-
-    for test in test_inputs:
+for endpoint in endpoints:
+    print(f"\n--- {endpoint} ---")
+    for case in test_cases:
         try:
-            res = requests.post(full_url, json=test)
-            output = res.text.strip()
+            res = requests.post(base_url + endpoint, json=case)
+            print(f"Input: {case['input']}\n→ Output: {res.json()}")
         except Exception as e:
-            output = f"ERROR: {str(e)}"
-        
-        print(f"Input: {test['input']} -> Output: {output}")
-        report[endpoint].append({
-            "input": test['input'],
-            "output": output
-        })
-        time.sleep(0.5)  # Respectful delay
-
-if __name__ == "__main__":
-    for endpoint in endpoints:
-        test_endpoint(endpoint)
-
-    # Save report
-    with open("blackbox_report.json", "w") as f:
-        json.dump(report, f, indent=4)
-    
-    print("\n✅ Testing complete. Results saved to blackbox_report.json")
+            print(f"Error on {endpoint} with input {case['input']}: {e}")
