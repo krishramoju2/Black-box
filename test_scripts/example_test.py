@@ -2,6 +2,10 @@ import requests
 
 base_url = "https://blackbox-interface.vercel.app"
 
+headers = {
+    "Content-Type": "application/json"
+}
+
 endpoints = [
     "/endpoint1",
     "/endpoint2",
@@ -10,7 +14,7 @@ endpoints = [
     "/endpoint5"
 ]
 
-test_cases = [
+test_inputs = [
     {"input": "hello"},
     {"input": "WORLD"},
     {"input": "aeiou"},
@@ -21,10 +25,10 @@ test_cases = [
 ]
 
 for endpoint in endpoints:
-    print(f"\n--- {endpoint} ---")
-    for case in test_cases:
+    print(f"\n--- Testing {endpoint} ---")
+    for data in test_inputs:
         try:
-            res = requests.post(base_url + endpoint, json=case)
-            print(f"Input: {case['input']}\n→ Output: {res.json()}")
+            res = requests.post(base_url + endpoint, headers=headers, json=data)
+            print(f"Input: {data['input']}\n→ Output: {res.json()}")
         except Exception as e:
-            print(f"Error on {endpoint} with input {case['input']}: {e}")
+            print(f"❌ Error on {endpoint} with input {data['input']}: {e}")
