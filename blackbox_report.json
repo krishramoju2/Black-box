@@ -1,0 +1,20 @@
+{
+    "/api/reverse": [
+        {
+            "input": "hello",
+            "output": "olleh"
+        },
+        {
+            "input": "1234",
+            "output": "4321"
+        },
+        ...
+    ],
+    "/api/uppercase": [
+        {
+            "input": "hello",
+            "output": "HELLO"
+        },
+        ...
+    ]
+}
